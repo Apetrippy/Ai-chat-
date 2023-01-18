@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>GPT-3 Chat</title>
+  </head>
+  <body>
+    <div id="chat-container">
+      <div id="chat-output"></div>
+      <form id="chat-form">
+        <input type="text" id="chat-input" placeholder="Type your message here...">
+        <button type="submit" id="chat-submit">Send</button>
+      </form>
+    </div>
+    <script>
+      // Get references to the input and output elements
+      let input = document.getElementById("chat-input");
+      let output = document.getElementById("chat-output");
+      
+      // Handle the form submission
+      document.getElementById("chat-form").addEventListener("submit", function(event) {
+        event.preventDefault(); // prevent the page from refreshing
+        
+        // Get the user's input
+        let userInput = input.value;
+        
+        // Clear the input field
+        input.value = "";
+        
+        // Send the user's input to the GPT-3 API for a response
+        let apiKey = "YOUR_API_KEY";
+        let apiUrl = "https://api.openai.com/v1/engines/davinci/completions";
+        
+        let data = {
+          prompt: userInput,
+          max_tokens: 100,
+          temperature: 0.5
+        };
+        
+        fetch(apiUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${apiKey}`
+          },
+          body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+          let aiResponse = data.choices[0].text;
+          
+          // Display the response in the output element
+          output.innerHTML += "<p>You: " + userInput + "</p>";
+          output.innerHTML += "<p>AI: " + aiResponse + "</p>";
+        });
+      });
+    </script>
+  </body>
+</html>
